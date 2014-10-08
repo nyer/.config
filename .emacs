@@ -1,3 +1,9 @@
+(require 'package)
+(add-to-list 'package-archives
+	'("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+   '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
 (add-to-list 'load-path "~/.emacs.d/")
 
 (setq inferior-lisp-program "sbcl")
@@ -7,9 +13,12 @@
 (require 'slime-autoloads)
 (slime-setup '(slime-fancy));beautify the sbcl
 
+;; auto-complete
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
 (ac-config-default)
+(global-auto-complete-mode t)
+(setq ac-modes '(c++-mode sql-mode java-mode JavaScript-mode css-mode html-mode coffee-mode js-mode text-mode jde-mode))
 
 (require 'nodejs-repl)
 
@@ -70,6 +79,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(coffee-tab-width 2)
+ '(ido-enable-flex-matching t)
  '(jde-jdk-registry (quote (("1.7" . "/usr/lib/jvm/jdk1.7.0_45") ("1.6" . "/usr/lib/jvm/java-6-oracle")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -79,3 +90,47 @@
  )
 
 (setq x-select-enbale-clipboard t)
+
+;; coffeescript
+(require 'coffee-mode)
+(add-to-list 'auto-mode-alist '("\\.coffee$" . coffee-mode))
+(add-to-list 'auto-mode-alist '("Cakefile" . coffee-mode))
+
+ ;; automatically clean up bad whitespace
+(setq whitespace-action '(auto-cleanup))
+ ;; only show bad whitespace
+(setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab))
+ ;; This gives you a tab of 2 spaces
+(custom-set-variables '(coffee-tab-width 2))
+
+;; Move to corresponding point in JavaScript file after compiling
+(setq coffee-args-compile '("-c" "-m")) ;; generating sourcemap
+(add-hook 'coffee-after-compile-hook 'sourcemap-goto-corresponding-point)
+
+;; If you want to remove sourcemap file after jumping corresponding point
+(defun my/coffee-after-compile-hook (props)
+  (sourcemap-goto-corresponding-point props)
+  (delete-file (plist-get props :sourcemap)))
+(add-hook 'coffee-after-compile-hook 'my/coffee-after-compile-hook)
+
+
+;; ido
+(require 'ido)
+(ido-mode t)
+
+;; idomenu
+(autoload 'idomenu "idomenu" nil t)
+
+;; make emacs transparent
+(defun transparency (value)
+   "Sets the transparency of the frame window. 0=transparent/100=opaque"
+   (interactive "nTransparency Value 0 - 100 opaque:")
+   (set-frame-parameter (selected-frame) 'alpha value))
+(transparency 95)
+
+;; color theme
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-classic)))
