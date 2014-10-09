@@ -18,7 +18,7 @@
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
 (ac-config-default)
 (global-auto-complete-mode t)
-(setq ac-modes '(c++-mode sql-mode java-mode JavaScript-mode css-mode html-mode coffee-mode js-mode text-mode jde-mode))
+(setq ac-modes '(c++-mode sql-mode java-mode JavaScript-mode css-mode html-mode coffee-mode js-mode text-mode jde-mode lisp-mode python-mode emacs-lisp-mode))
 
 (require 'nodejs-repl)
 
@@ -73,7 +73,7 @@
 
 ;; jdee
 (add-to-list 'load-path "~/.emacs.d/jdee-2.4.1/lisp/")
-(load "jde")
+;;(load "jde")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -134,3 +134,24 @@
   '(progn
      (color-theme-initialize)
      (color-theme-classic)))
+
+;; textmate
+(require 'textmate)
+(textmate-mode)
+
+;; nxml-mode
+(add-to-list 'load-path "/home/leiting/.emacs.d/nxml-mode-20041004/")
+(add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode))
+
+;; tidy 
+(add-to-list 'load-path "~/.emacs.d/elpa/tidy-20111222.1756/")
+(autoload 'tidy-buffer "tidy" "Run Tidy HTML parser on current buffer" t)
+(autoload 'tidy-parse-config-file "tidy" "Parse the `tidy-config-file'" t)
+(autoload 'tidy-save-settings "tidy" "Save settings to `tidy-config-file'" t)
+(autoload 'tidy-build-menu "tidy" "Install an options menu for HTML Tidy." t)
+
+(defun my-html-mode-hook () "Customize my html-mode"
+  (tidy-build-menu html-mode-map)
+  (local-set-key [(control c) (control c)] 'tidy-buffer)
+  (setq sgml-validate-command "tidy"))
+(add-hook 'html-mode-hook 'my-html-mode-hook)
