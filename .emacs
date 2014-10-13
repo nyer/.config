@@ -5,6 +5,11 @@
    '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 
 (add-to-list 'load-path "~/.emacs.d/")
+(let ((default-directory "~/.emacs.d/"))
+    (normal-top-level-add-subdirs-to-load-path))
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 (setq inferior-lisp-program "sbcl")
 (add-to-list 'load-path "/home/leiting/.emacs.d/slime-2.5/")
