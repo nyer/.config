@@ -18,7 +18,7 @@
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
 (ac-config-default)
 (global-auto-complete-mode t)
-(setq ac-modes '(c++-mode sql-mode java-mode JavaScript-mode css-mode html-mode coffee-mode js-mode text-mode jde-mode lisp-mode python-mode emacs-lisp-mode))
+(setq ac-modes '(c++-mode sql-mode java-mode JavaScript-mode css-mode html-mode coffee-mode js-mode text-mode jde-mode lisp-mode python-mode emacs-lisp-mode eshell-mode))
 
 (require 'nodejs-repl)
 
@@ -155,3 +155,11 @@
   (local-set-key [(control c) (control c)] 'tidy-buffer)
   (setq sgml-validate-command "tidy"))
 (add-hook 'html-mode-hook 'my-html-mode-hook)
+
+;; shell autocomplete
+;;(require 'readline-complete)
+(setq explicit-shell-file-name "bash")
+(setq explicit-bash-args '("-c" "export EMACS=; stty echo; bash"))
+(setq comint-process-echoes t)
+(add-to-list 'ac-modes 'shell-mode)
+;;(add-hook 'shell-mode-hook 'ac-rlc-setup-sources)
