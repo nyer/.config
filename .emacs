@@ -10,6 +10,18 @@
 (setq package-check-signature nil)
 (package-initialize)
 
+;;install packages
+;; load package list
+(unless package-archive-contents
+    (package-refresh-contents))
+;; packages want to install
+(setq package-list '(slime auto-complete nodejs-repl chm-view chinese-pyim chinese-pyim-wbdict
+                           ido color-theme tidy emmet-mode web-mode))
+;; install package
+(dolist (package package-list)
+    (unless (package-installed-p package)
+                    (package-install package)))
+
 ;(add-to-list 'load-path "~/.emacs.d/")
 ;(let ((default-directory "~/.emacs.d/"))
 ;    (normal-top-level-add-subdirs-to-load-path))
