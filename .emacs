@@ -5,8 +5,9 @@
 ;; You may delete these explanatory comments.
 
 (require 'package)
-(add-to-list 'package-archives
-   '("melpa-stable" . "http://melpa-stable.melpa.org/packages/") t)
+(setq package-archives
+            '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+           ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 (setq package-check-signature nil)
 (package-initialize)
 
