@@ -6,8 +6,8 @@
 
 (require 'package)
 (setq package-archives
-            '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-           ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+            '(("gnu-china"   . "http://elpa.emacs-china.org/gnu/")
+           ("melpa-china" . "http://elpa.emacs-china.org/melpa/")))
 (setq package-check-signature nil)
 (package-initialize)
 
@@ -16,8 +16,7 @@
 (unless package-archive-contents
     (package-refresh-contents))
 ;; packages want to install
-(setq package-list '(slime auto-complete nodejs-repl chm-view chinese-pyim chinese-pyim-wbdict
-                           ido color-theme tidy emmet-mode web-mode))
+(setq package-list '(slime auto-complete nodejs-repl chinese-wbim ido color-theme tidy emmet-mode web-mode))
 ;; install package
 (dolist (package package-list)
     (unless (package-installed-p package)
@@ -57,17 +56,21 @@
 (require 'chm-view)
 (setq browse-url-browser-function 'w3m-browse-url)
 
-;; Chinese pyim
-(require 'chinese-pyim)
-(require 'chinese-pyim-wbdict)
+;; Chinese wbim
+(autoload 'chinese-wbim-use-package "chinese-wbim" "Another emacs input method")
+;; Tooltip 暂时还不好用
+(setq chinese-wbim-use-tooltip nil)
 
-;;(setq default-input-method "chinese-pyim")
-(setq pyim-default-scheme 'wubi)
-;;(setq pyim-use-tooltip 'popup)
-(chinese-pyim-wbdict-gb2312-enable) ; gb2312 version
-(global-set-key (kbd "C-\\") 'toggle-input-method)
-(add-hook 'emacs-startup-hook
-            #'(lambda () (pyim-restart-1 t)))
+(register-input-method
+ "chinese-wbim" "euc-cn" 'chinese-wbim-use-package
+ "五笔" "汉字五笔输入法" "wb.txt")
+
+;; 用 ; 暂时输入英文
+(require 'chinese-wbim-extra)
+(global-set-key ";" 'chinese-wbim-insert-ascii)
+
+;设置默认输入法
+(setq default-input-method 'chinese-wbim)
 
 ;; get rid of menu bar in terminal emacs
 (if (equal window-system nil)
@@ -93,8 +96,8 @@
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
  '(package-selected-packages
-   (quote
-    (web-mode w3m tidy textmate slime nodejs-repl idomenu emmet-mode color-theme chm-view chinese-wbim chinese-pyim-wbdict auto-complete))))
+        (quote
+         (git flycheck json-mode js2-mode web-mode w3m tidy textmate slime nodejs-repl idomenu emmet-mode color-theme chm-view chinese-wbim chinese-pyim-wbdict auto-complete))))
 
 ;; ido
 (require 'ido)
@@ -161,6 +164,10 @@
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+
 (setq web-mode-code-indent-offset 2)
 (setq web-mode-css-indent-offset 2)
 (setq web-mode-markup-indent-offset 2)
+
+;;(global-flycheck-mode)
